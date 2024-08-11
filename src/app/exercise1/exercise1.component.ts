@@ -1,15 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import {Observable} from "rxjs";
+import {Country} from "./cointry.model";
+import {CountryService} from "./country.service";
+import {FormControl} from "@angular/forms";
 
 @Component({
   selector: 'app-exercise1',
   templateUrl: './exercise1.component.html',
   styleUrls: ['./exercise1.component.css']
 })
-export class Exercise1Component implements OnInit {
+export class Exercise1Component {
 
-  constructor() { }
+  countries$: Observable<Country[]> = this.countryService.getCountries();
 
-  ngOnInit() {
-  }
+  countriesSelect = new FormControl();
 
+  constructor(private countryService: CountryService) {}
 }

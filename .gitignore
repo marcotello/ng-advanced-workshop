@@ -44,3 +44,9 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+*.pack
+
+.angular/cache/15.2.2/angular-webpack/9a00e8b3206982ec3561e7b314e9a8679675d68a/index.pack.old
+
+.angular/cache/15.2.2/babel-webpack/
