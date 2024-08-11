@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import {Observable} from "rxjs";
+import {Country} from "./cointry.model";
+import {CountryService} from "./country.service";
+import {tap} from "rxjs/operators";
+import {FormControl} from "@angular/forms";
 
 @Component({
   selector: 'app-exercise1',
@@ -7,9 +12,25 @@ import { Component, OnInit } from '@angular/core';
 })
 export class Exercise1Component implements OnInit {
 
-  constructor() { }
+  numberOfCountries: number;
+  countryId: string;
 
-  ngOnInit() {
+  countries$: Observable<Country[]>;
+
+  countriesSelect = new FormControl();
+
+  constructor(private countryService: CountryService) {}
+
+  ngOnInit(): void {
+    this.countries$ = this.countryService.getCountries()
+      .pipe(
+        tap(countries => {
+          this.numberOfCountries = countries.length
+        })
+      );
   }
 
+  onSelected(value: string) {
+    this.countryId = value;
+  }
 }

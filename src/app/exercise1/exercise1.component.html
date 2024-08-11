@@ -13,11 +13,11 @@
 <h2>Result</h2>
 <!-- Edit the code down below to implement the requested features -->
 <div>
-  <div>Select one of 0 countries:</div>
-  <select>
-    <option>
-      United States
+  <div>Select one of {{numberOfCountries}} countries:</div>
+  <select [formControl]="countriesSelect" #countries (change)="onSelected(countries.value)">
+    <option *ngFor="let country of countries$ | async;" value="{{country.id}}">
+      {{country.description}}
     </option>
   </select>
-  <div>Current value: US</div>
+  <div>Current value: {{countryId}}</div>
 </div>
