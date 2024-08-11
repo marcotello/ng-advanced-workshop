@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {Observable} from "rxjs";
-import {Country} from "./cointry.model";
+import {Country} from "./country.model";
 import {CountryService} from "./country.service";
 import {FormControl} from "@angular/forms";
 
