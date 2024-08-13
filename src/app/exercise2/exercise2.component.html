@@ -26,6 +26,9 @@
     <option>
       State or province
     </option>
+    <option *ngFor="let state of states$ | async">
+      {{state.description | titlecase}}
+    </option>
   </select>
   <div>Current value: {{statesDropdown.value}}</div>
 </div>
