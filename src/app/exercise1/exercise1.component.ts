@@ -13,7 +13,7 @@ export class Exercise1Component {
 
   countries$: Observable<Country[]> = this.countryService.getCountries();
 
-  countriesSelect = new FormControl();
+  countriesSelect = new FormControl<Country['id']>(null);
 
   constructor(private countryService: CountryService) {}
 }
