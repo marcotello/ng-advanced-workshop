@@ -3,6 +3,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Country} from './types';
 import {State} from "./state.model";
+import {map} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,9 @@ export class CountryService {
 
   getStatesForCountry(countryId: string): Observable<State[]> {
     const queryParams = new HttpParams().append('countryCode', countryId);
-    return this.http.get<State[]>(`${this.BASE_URL}/states`, {params: queryParams});
+    return this.http.get<State[]>(`${this.BASE_URL}/states`, {params: queryParams})
+      .pipe(
+        map(states => states.sort((a, b) => (a.description > b.description) ? 1 : -1))
+      );
   }
 }

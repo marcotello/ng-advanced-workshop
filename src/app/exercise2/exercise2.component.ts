@@ -15,7 +15,7 @@ export class Exercise2Component {
 
   countries$: Observable<Country[]> = this.service.getCountries();
   countryDropdown = new FormControl<Country['id']>(null);
-  stateDropdown = new FormControl<State['id']>(null);
+  stateDropdown = new FormControl<State['code']>(null);
 
   states$: Observable<State[]> = this.countryDropdown.valueChanges
     .pipe(
