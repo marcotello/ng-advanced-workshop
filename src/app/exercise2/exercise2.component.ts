@@ -4,6 +4,7 @@ import {Country} from './types';
 import {CountryService} from './country.service';
 import {FormControl} from '@angular/forms';
 import {State} from "./state.model";
+import {tap} from "rxjs/operators";
 
 @Component({
   selector: 'app-exercise2',
@@ -14,6 +15,7 @@ export class Exercise2Component {
 
   countries$: Observable<Country[]> = this.service.getCountries();
   countryDropdown = new FormControl<Country['id']>(null);
+  stateDropdown = new FormControl<State['id']>(null);
 
   states$: Observable<State[]> = this.countryDropdown.valueChanges
     .pipe(
