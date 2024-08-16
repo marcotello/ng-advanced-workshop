@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
-import {Observable} from 'rxjs';
+import {Observable, switchMap} from 'rxjs';
 import {Country} from './types';
 import {CountryService} from './country.service';
 import {FormControl} from '@angular/forms';
+import {State} from "./state.model";
+import {tap} from "rxjs/operators";
 
 @Component({
   selector: 'app-exercise2',
@@ -13,7 +15,13 @@ export class Exercise2Component {
 
   countries$: Observable<Country[]> = this.service.getCountries();
   countryDropdown = new FormControl<Country['id']>(null);
+  stateDropdown = new FormControl<State['code']>(null);
 
-  constructor(private service: CountryService) { }
+  states$: Observable<State[]> = this.countryDropdown.valueChanges
+    .pipe(
+      switchMap(countryId => this.service.getStatesForCountry(countryId))
+    );
 
+  constructor(private service: CountryService) {
+  }
 }
