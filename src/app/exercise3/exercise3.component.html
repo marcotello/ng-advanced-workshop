@@ -10,11 +10,15 @@
 <h4>You can take a look at the expected result here: <a routerLink="/solution/3">http://localhost:4200/solution/3</a> </h4>
 <hr>
 <h2>Result</h2>
-<div *ngIf="countries$ | async as countries">
+<div>
   <div class="dropdown">
-    <input type="text" class="dropbtn" [value]="country?.description" placeholder="Enter country name">
-    <div class="dropdown-content">
-      <span *ngFor="let country of countries" (click)="updateStates(country)">{{country.description}}</span>
+    <input [formControl]="countryControl" type="text" class="dropbtn"
+           [value]="country?.description" placeholder="Enter country name">
+    <div class="dropdown-content" *ngIf="countries$ | async as countries">
+      <div *ngFor="let country of countries" (click)="updateStates(country)">
+        <span [innerHTML]="country.description | boldMatchText: countryControl.value">
+        </span>
+      </div>
     </div>
   </div>
 </div>
