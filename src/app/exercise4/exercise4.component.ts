@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import {Observable} from 'rxjs';
+import {Component} from '@angular/core';
+import {Observable, startWith} from 'rxjs';
 import {Country, State} from './types';
 import {FormControl} from '@angular/forms';
 import {CountryService} from './country.service';
-import {map, withLatestFrom} from 'rxjs/operators';
+import {map, tap, withLatestFrom} from 'rxjs/operators';
 
 @Component({
   selector: 'app-exercise4',
@@ -16,6 +16,9 @@ export class Exercise4Component {
   states$!: Observable<State[]>;
   state!: State;
   countryControl = new FormControl<string>('');
+  stateControl = new FormControl<string>('');
+  showStates = false;
+
 
   constructor(private service: CountryService) {
     this.countries$ = this.countryControl.valueChanges.pipe(
@@ -27,6 +30,15 @@ export class Exercise4Component {
 
   updateStates(country: Country) {
     this.countryControl.setValue(country.description);
-    this.states$ = this.service.getStatesFor(country.id);
+    this.showStates = true;
+
+    this.states$ = this.stateControl.valueChanges
+      .pipe(
+        startWith(''),
+        withLatestFrom(this.service.getStatesFor(country.id)),
+        map(([userInput, states]) =>
+          states.filter(s => s.description.toLowerCase().indexOf((userInput?? "").toLowerCase())!== -1)
+        )
+      );
   }
 }
