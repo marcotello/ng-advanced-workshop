@@ -31,6 +31,7 @@ export class Exercise4Component {
   updateStates(country: Country) {
     this.countryControl.setValue(country.description);
     this.showStates = true;
+    this.stateControl.reset();
 
     this.states$ = this.stateControl.valueChanges
       .pipe(
