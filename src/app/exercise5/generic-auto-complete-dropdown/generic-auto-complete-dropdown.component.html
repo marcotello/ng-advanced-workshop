@@ -1,0 +1,9 @@
+<div class="dropdown">
+  <input type="text" class="dropbtn" [formControl]="genericAutoCompleteDropdownControl"
+         placeholder="{{inputPlaceHolder}}" >
+  <div class="dropdown-content" *ngIf="countriesObservable$ | async as countries">
+      <span *ngFor="let country of countries" (click)="itemSelected(country)"
+            [innerHTML]="country.description | highlight: genericAutoCompleteDropdownControl.value">
+      </span>
+  </div>
+</div>

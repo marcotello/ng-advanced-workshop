@@ -21,9 +21,8 @@ export class Exercise5Component {
   stateControl = new FormControl('');
 
   constructor(private service: CountryService) {
-    this.countries$ = combineLatest([this.countryControl.valueChanges, this.service.getCountries()]).pipe(
-      map(([userInput, countries]) => countries.filter(c => c.description.toLowerCase().indexOf(userInput.toLowerCase()) !== -1))
-    );
+    this.countries$ = this.service.getCountries();
+
     this.statesForCountry$ = this.currentCountry$.asObservable().pipe(
       tap(console.log),
       switchMap(cntry => this.service.getStatesFor(cntry.id))
