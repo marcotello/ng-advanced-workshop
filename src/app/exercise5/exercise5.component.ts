@@ -1,7 +1,8 @@
 import {Component, ViewChild} from '@angular/core';
-import {Observable, Subject} from 'rxjs';
+import {Observable, of, Subject} from 'rxjs';
 import {Country, State} from './types';
 import {CountryService} from './country.service';
+import {switchMap} from "rxjs/operators";
 
 @Component({
   selector: 'app-exercise5',
@@ -15,17 +16,20 @@ export class Exercise5Component {
 
   countries$: Observable<Country[]>;
   currentCountry$ = new Subject<Country>();
-  states$: Observable<State[]>;
+
+  states$: Observable<State[]> = of([]);
 
   @ViewChild('stateAutocomplete') stateAutocompleteInputRef:any;
 
   constructor(private service: CountryService) {
     this.countries$ = this.service.getCountries();
+    this.states$ = this.currentCountry$.asObservable().pipe(
+      switchMap(country => this.service.getStatesFor(country.id))
+    );
   }
 
   updateStates(country: Country): void {
-    this.stateAutocompleteInputRef.reset();
-    this.states$ = this.service.getStatesFor(country.id);
+    this.currentCountry$.next(country);
     this.selectedCountry = country;
     this.selectedState = undefined;
   }

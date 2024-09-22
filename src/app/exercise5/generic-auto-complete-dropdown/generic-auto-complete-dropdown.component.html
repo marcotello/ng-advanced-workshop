@@ -1,7 +1,7 @@
 <div class="dropdown">
   <input type="text" class="dropbtn" [formControl]="genericAutoCompleteDropdownControl"
          placeholder="{{inputPlaceHolder}}" >
-  <div class="dropdown-content" *ngIf="itemsObservable$ | async as items">
+  <div class="dropdown-content" *ngIf="combinedItems$ | async as items">
       <span *ngFor="let item of items" (click)="itemSelected(item)"
             [innerHTML]="item.description | highlight: genericAutoCompleteDropdownControl.value">
       </span>

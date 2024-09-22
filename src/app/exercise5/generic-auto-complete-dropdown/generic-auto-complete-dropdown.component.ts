@@ -1,6 +1,6 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormControl} from "@angular/forms";
-import {combineLatest, Observable, startWith, Subject} from "rxjs";
+import {combineLatest, Observable, startWith} from "rxjs";
 import {map} from "rxjs/operators";
 import {Descriptionwise} from "./descriptionwise";
 
@@ -9,41 +9,38 @@ import {Descriptionwise} from "./descriptionwise";
   templateUrl: './generic-auto-complete-dropdown.component.html',
   styleUrls: ['./generic-auto-complete-dropdown.component.css']
 })
-export class GenericAutoCompleteDropdownComponent<T extends Descriptionwise> implements OnChanges {
+export class GenericAutoCompleteDropdownComponent<T extends Descriptionwise> implements OnInit{
 
   genericAutoCompleteDropdownControl = new FormControl<string>('')
 
-  items$ = new Subject<T[]>();
-  itemsObservable$: Observable<T[]>;
+  combinedItems$: Observable<T[]>;
   itemControlFilter$ = this.genericAutoCompleteDropdownControl.valueChanges.pipe(startWith(''));
 
   @Input() inputPlaceHolder: string;
-  @Input() items: T[];
+  @Input() items$: Observable<T[]>;
 
-  @Output() selectedItem = new EventEmitter<T>();
+  @Input()
+  set selection(entry: T) {
+    if (entry) {
+      this.genericAutoCompleteDropdownControl.setValue(entry.description);
+    } else {
+      this.genericAutoCompleteDropdownControl.setValue('');
+    }
+  }
 
-  constructor() {
-    this.itemsObservable$ = combineLatest([this.itemControlFilter$, this.items$.asObservable()])
+  @Output()
+  selectionChange = new EventEmitter<T>();
+
+  ngOnInit() {
+    this.combinedItems$ = combineLatest([this.itemControlFilter$, this.items$])
       .pipe(
         map(([userInput, items]) =>
           items.filter(i => i.description.toLowerCase().indexOf(userInput.toLowerCase()) !== -1))
       );
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    for (const propName in changes) {
-      if (propName === 'items' && this.items !== null) {
-        this.items$.next(this.items);
-      }
-    }
-  }
-
   protected itemSelected(item: T): void {
     this.genericAutoCompleteDropdownControl.setValue(item.description);
-    this.selectedItem.emit(item);
-  }
-
-  reset(): void {
-    this.genericAutoCompleteDropdownControl.setValue('');
+    this.selectionChange.emit(item);
   }
 }
