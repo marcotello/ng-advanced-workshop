@@ -1,9 +1,8 @@
-import { Component } from '@angular/core';
-import {combineLatest, Observable, of, Subject} from 'rxjs';
+import {Component, ViewChild} from '@angular/core';
+import {Observable, of, Subject} from 'rxjs';
 import {Country, State} from './types';
-import {FormControl} from '@angular/forms';
 import {CountryService} from './country.service';
-import {map, switchMap, tap} from 'rxjs/operators';
+import {switchMap} from "rxjs/operators";
 
 @Component({
   selector: 'app-exercise5',
@@ -12,31 +11,28 @@ import {map, switchMap, tap} from 'rxjs/operators';
 })
 export class Exercise5Component {
 
+  selectedCountry: Country;
+  selectedState: State;
+
   countries$: Observable<Country[]>;
   currentCountry$ = new Subject<Country>();
-  states$: Observable<State[]>;
-  statesForCountry$: Observable<State[]> =  of([]);
-  state: State;
-  countryControl = new FormControl('');
-  stateControl = new FormControl('');
+
+  states$: Observable<State[]> = of([]);
 
   constructor(private service: CountryService) {
-    this.countries$ = combineLatest([this.countryControl.valueChanges, this.service.getCountries()]).pipe(
-      map(([userInput, countries]) => countries.filter(c => c.description.toLowerCase().indexOf(userInput.toLowerCase()) !== -1))
-    );
-    this.statesForCountry$ = this.currentCountry$.asObservable().pipe(
-      tap(console.log),
-      switchMap(cntry => this.service.getStatesFor(cntry.id))
-    );
-    this.states$ = combineLatest([this.stateControl.valueChanges, this.statesForCountry$]).pipe(
-      map(([userInput, states]) => states.filter(c => c.description.toLowerCase().indexOf(userInput.toLowerCase()) !== -1))
+    this.countries$ = this.service.getCountries();
+    this.states$ = this.currentCountry$.asObservable().pipe(
+      switchMap(country => this.service.getStatesFor(country.id))
     );
   }
 
-  updateStates(country: Country) {
-    this.countryControl.setValue(country.description);
-    this.stateControl.setValue('');
+  updateStates(country: Country): void {
     this.currentCountry$.next(country);
+    this.selectedCountry = country;
+    this.selectedState = undefined;
   }
 
+  getSelectedState(state: State): void {
+    this.selectedState = state;
+  }
 }
