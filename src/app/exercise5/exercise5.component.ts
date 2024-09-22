@@ -19,8 +19,6 @@ export class Exercise5Component {
 
   states$: Observable<State[]> = of([]);
 
-  @ViewChild('stateAutocomplete') stateAutocompleteInputRef:any;
-
   constructor(private service: CountryService) {
     this.countries$ = this.service.getCountries();
     this.states$ = this.currentCountry$.asObservable().pipe(
