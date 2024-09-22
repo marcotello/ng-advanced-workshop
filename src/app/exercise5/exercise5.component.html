@@ -12,18 +12,19 @@
 <h2>Result</h2>
 <div>
   <app-generic-auto-complete-dropdown [inputPlaceHolder]="'Enter country name'"
-                                      [countries]="countries$ | async"
-                                      (selectedCountry)="updateStates($event)">
+                                      [items]="countries$ | async"
+                                      (selectedItem)="updateStates($event)">
   </app-generic-auto-complete-dropdown>
 </div>
 <div>
-  <div class="dropdown">
-    <input type="text" class="dropbtn" [formControl]="stateControl"
-           placeholder="Enter your state">
-    <div class="dropdown-content" *ngIf="states$ | async as states">
-      <span *ngFor="let s of states" (click)="stateControl.setValue(s.description)"
-            [innerHTML]="s.description | titlecase | highlight: stateControl.value">
-      </span>
-    </div>
-  </div>
+  <app-generic-auto-complete-dropdown #stateAutocomplete [inputPlaceHolder]="'Enter your state'"
+                                      [items]="states$ | async"
+                                      (selectedItem)="getSelectedState($event)">
+  </app-generic-auto-complete-dropdown>
+</div>
+<hr>
+<div>
+  Current selection<br>
+  Country: {{selectedCountry | json}} <br>
+  State: {{selectedState | json}}
 </div>

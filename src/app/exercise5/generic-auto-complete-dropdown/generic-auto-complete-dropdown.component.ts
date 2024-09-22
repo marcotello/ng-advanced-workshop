@@ -1,49 +1,49 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {Country} from "../types";
 import {FormControl} from "@angular/forms";
-import {combineLatest, Observable, Subject} from "rxjs";
+import {combineLatest, Observable, startWith, Subject} from "rxjs";
 import {map} from "rxjs/operators";
+import {Descriptionwise} from "./descriptionwise";
 
 @Component({
   selector: 'app-generic-auto-complete-dropdown',
   templateUrl: './generic-auto-complete-dropdown.component.html',
   styleUrls: ['./generic-auto-complete-dropdown.component.css']
 })
-export class GenericAutoCompleteDropdownComponent implements OnChanges {
+export class GenericAutoCompleteDropdownComponent<T extends Descriptionwise> implements OnChanges {
 
   genericAutoCompleteDropdownControl = new FormControl<string>('')
 
-  countries$ = new Subject<Country[]>();
-  countriesObservable$: Observable<Country[]>;
+  items$ = new Subject<T[]>();
+  itemsObservable$: Observable<T[]>;
+  itemControlFilter$ = this.genericAutoCompleteDropdownControl.valueChanges.pipe(startWith(''));
 
   @Input() inputPlaceHolder: string;
-  @Input() countries: Country[];
+  @Input() items: T[];
 
-  @Output() selectedCountry = new EventEmitter<Country>();
+  @Output() selectedItem = new EventEmitter<T>();
 
   constructor() {
-    this.countriesObservable$ = combineLatest([this.genericAutoCompleteDropdownControl.valueChanges, this.countries$.asObservable()])
+    this.itemsObservable$ = combineLatest([this.itemControlFilter$, this.items$.asObservable()])
       .pipe(
-        map(([userInput, countries]) =>
-          countries.filter(c => c.description.toLowerCase().indexOf(userInput.toLowerCase()) !== -1))
+        map(([userInput, items]) =>
+          items.filter(i => i.description.toLowerCase().indexOf(userInput.toLowerCase()) !== -1))
       );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     for (const propName in changes) {
-      if (propName === 'countries' && this.countries !== null) {
-        this.countries$.next(this.countries);
+      if (propName === 'items' && this.items !== null) {
+        this.items$.next(this.items);
       }
     }
   }
 
-  itemSelected(country: Country): void {
-    this.genericAutoCompleteDropdownControl.setValue(country.description);
-    this.selectedCountry.emit(country);
+  protected itemSelected(item: T): void {
+    this.genericAutoCompleteDropdownControl.setValue(item.description);
+    this.selectedItem.emit(item);
   }
 
-  countCountries() {
-    console.log(this.countries);
-    this.countries$.next(this.countries);
+  reset(): void {
+    this.genericAutoCompleteDropdownControl.setValue('');
   }
 }
