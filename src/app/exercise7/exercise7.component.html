@@ -11,6 +11,19 @@
 <h4>You can take a look at the expected result here: <a routerLink="/solution/7">http://localhost:4200/solution/7</a> </h4>
 <hr>
 <h2>Result</h2>
-<button>Save</button>
+<app-button-with-states [initialTemplate]="saveTemp" [workingTemplate]="savingsTemp" [doneTemplate]="savedTemp">
+</app-button-with-states>
 <br> <br>
 <a href="javascript:">Save from a link</a>
+
+<ng-template #saveTemp>
+  Save
+</ng-template>
+
+<ng-template #savingsTemp>
+  <img src="assets/loader.gif" style="width: 20px" alt="saving">
+</ng-template>
+
+<ng-template #savedTemp>
+  Saved!
+</ng-template>

@@ -27,13 +27,14 @@ import { Exercise7Component } from './exercise7/exercise7.component';
 import { BoldMatchTextPipe } from './exercise3/bold-match-text.pipe';
 import { GenericAutoCompleteDropdownComponent } from './exercise5/generic-auto-complete-dropdown/generic-auto-complete-dropdown.component';
 import { AtButtonDirective } from './exercise6/directives/at-button.directive';
+import { ButtonWithStatesComponent } from './exercise7/button-with-states/button-with-states.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     Exercise1Component, Solution1Component, Exercise2Component, Solution2Component, Exercise3Component, Solution3Component, HighlightPipe,
     Exercise4Component, Solution4Component, MainPageComponent, Exercise5Component, Solution5Component, AutofilterDropdownComponent,
-    Solution6Component, StateButtonDirective, Exercise6Component, Solution7Component, StateButtonComponent, Exercise7Component, BoldMatchTextPipe, GenericAutoCompleteDropdownComponent, AtButtonDirective
+    Solution6Component, StateButtonDirective, Exercise6Component, Solution7Component, StateButtonComponent, Exercise7Component, BoldMatchTextPipe, GenericAutoCompleteDropdownComponent, AtButtonDirective, ButtonWithStatesComponent
   ],
   imports: [
     BrowserModule,
